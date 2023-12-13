@@ -1,0 +1,27 @@
+package main
+
+import (
+	"reflect"
+	"testing"
+)
+
+func logic(input string) bool {
+    var result bool;
+    return result;
+}
+
+type singleTest struct {
+	arg1     string
+	expected []bool
+}
+
+var tests = []singleTest{}
+
+func TestLogic(t *testing.T) {
+	for _, test := range tests {
+		if output := logic(test.arg1); !reflect.DeepEqual(output, test.expected) {
+			t.Error(output, test.expected)
+		}
+	}
+}
+
