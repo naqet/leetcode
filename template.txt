@@ -11,15 +11,15 @@ func logic(input string) bool {
 }
 
 type singleTest struct {
-	arg1     string
-	expected []bool
+	input     string
+	expected bool
 }
 
 var tests = []singleTest{}
 
 func TestLogic(t *testing.T) {
 	for _, test := range tests {
-		if output := logic(test.arg1); !reflect.DeepEqual(output, test.expected) {
+		if output := logic(test.input); !reflect.DeepEqual(output, test.expected) {
 			t.Error(output, test.expected)
 		}
 	}
