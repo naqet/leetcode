@@ -5,32 +5,50 @@ import (
 )
 
 type TimeMap struct {
-	db    map[int][2]string
-	times []int
+	db    map[string][]Pair
+}
+
+type Pair struct {
+    val string
+    time int
 }
 
 func Constructor() TimeMap {
-	return TimeMap{map[int][2]string{}, []int{}}
+	return TimeMap{map[string][]Pair{}}
 }
 
 func (this *TimeMap) Set(key string, value string, timestamp int) {
-	this.db[timestamp] = [2]string{key, value}
-	this.times = append(this.times, timestamp)
+    _, ok := this.db[key];
+
+    if !ok {
+        this.db[key] = []Pair{};
+    }
+
+	this.db[key] = append(this.db[key], Pair{value, timestamp})
 }
 
 func (this *TimeMap) Get(key string, timestamp int) string {
 	result := ""
 
-	for i := len(this.times) - 1; i >= 0; i-- {
-		val := this.times[i]
-		if val <= timestamp {
-			storedKey := this.db[val][0]
-			if key == storedKey {
-				result = this.db[val][1]
-				break
-			}
-		}
-	}
+    pairs, ok := this.db[key];
+
+    if !ok {
+        return result;
+    }
+
+    lo, hi:= 0, len(pairs) - 1;
+
+    for lo <= hi {
+        mid := lo + (hi - lo) / 2
+        time := pairs[mid].time
+
+        if time <= timestamp {
+            result = pairs[mid].val;
+            lo = mid + 1;
+        } else {
+            hi = mid - 1
+        }
+    }
 	return result
 }
 
