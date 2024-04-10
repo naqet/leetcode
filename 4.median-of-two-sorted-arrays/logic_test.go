@@ -1,26 +1,78 @@
 package main
 
 import (
+	"math"
 	"reflect"
-	"slices"
 	"testing"
 )
 
 func logic(nums1 []int, nums2 []int) float64 {
 	var result float64
+	if len(nums2) < len(nums1) {
+		nums1, nums2 = nums2, nums1
+	}
 
-    arr := slices.Concat(nums1, nums2);
+	length := len(nums1) + len(nums2)
 
-    slices.Sort(arr);
+	lo := 0
+	hi := len(nums1)
 
-    if len(arr) % 2 == 0 {
-        first := float64(arr[len(arr) / 2]);
-        second := float64(arr[(len(arr) / 2) - 1]);
-        result = (first + second) / 2
-    } else {
-        result = float64(arr[len(arr) / 2]);
-    }
+	for lo <= hi {
+		pleft := lo + (hi-lo)/2
+		pright := ((length + 1) / 2) - pleft
+
+        maxLeft := math.MinInt;
+        if pleft > 0 {
+            maxLeft = nums1[pleft - 1]
+        }
+
+        minLeft := math.MaxInt;
+        if pleft < len(nums1) {
+            minLeft = nums1[pleft];
+        }
+
+        maxRight := math.MinInt;
+        if pright > 0 {
+            maxRight = nums2[pright - 1]
+        }
+
+        minRight := math.MaxInt;
+        if pright < len(nums2) {
+            minRight = nums2[pright];
+        }
+
+		if maxLeft <= minRight && maxRight <= minLeft {
+			realMax := float64(max(maxLeft, maxRight))
+
+			if length%2 == 0 {
+				realMin := float64(min(minLeft, minRight))
+				result = (realMax + realMin) / 2
+			} else {
+				result = realMax
+			}
+			break
+		} else if maxLeft > minRight {
+			hi = pleft - 1
+		} else {
+			lo = pleft + 1
+		}
+	}
+
 	return result
+}
+
+func max(one int, two int) int {
+	if one >= two {
+		return one
+	}
+	return two
+}
+
+func min(one int, two int) int {
+	if one <= two {
+		return one
+	}
+	return two
 }
 
 type singleTest struct {
