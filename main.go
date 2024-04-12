@@ -43,6 +43,6 @@ func main() {
 	}
 
 	// Copy the test command for given problem
-	exec.Command("sh", "-c", "echo go test ./"+problem+"/logic_test.go "+"| pbcopy").Run()
+	exec.Command("sh", "-c", `printf "go test -v ./`+problem+`/logic_test.go" `+"| pbcopy").Run()
 	log.Println("Created new problem!")
 }
