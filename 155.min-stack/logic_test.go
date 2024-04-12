@@ -4,9 +4,14 @@ import (
 	"testing"
 )
 
+type Node struct {
+    value int
+    min int
+    prev *Node
+}
+
 type MinStack struct {
-    stack []int
-    min[]int
+    head *Node
 }
 
 
@@ -15,29 +20,42 @@ func Constructor() MinStack {
 }
 
 
-func (this *MinStack) Push(val int)  {
-    if len(this.min) == 0 || val <= this.GetMin() {
-        this.min = append(this.min, val);
+func (this *MinStack) Push(val int) {
+    newNode := &Node{value: val, min: val}
+    if this.head == nil {
+        this.head = newNode;
+        return
     }
-    this.stack = append(this.stack, val)
+
+    if this.head.min < newNode.min {
+        newNode.min = this.head.min;
+    }
+
+    newNode.prev = this.head;
+    this.head = newNode;
 }
 
 
-func (this *MinStack) Pop()  {
-    if this.Top() == this.GetMin() {
-        this.min = this.min[:len(this.min)-1]
+func (this *MinStack) Pop() {
+    if this.head == nil {
+        return
     }
-    this.stack = this.stack[:len(this.stack)-1]
+
+    if this.head.prev != nil {
+        this.head = this.head.prev
+    } else {
+        this.head = nil;
+    }
 }
 
 
 func (this *MinStack) Top() int {
-    return this.stack[len(this.stack)-1];
+    return this.head.value;
 }
 
 
 func (this *MinStack) GetMin() int {
-    return this.min[len(this.min)-1];
+    return this.head.min;
 }
 
 func TestLogic(t *testing.T) {
