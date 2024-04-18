@@ -5,88 +5,52 @@ import (
 	"testing"
 )
 
-type Node struct {
-	value int
-	left  *Node
-	right *Node
-}
-
-type Deque struct {
-	head   *Node
-	tail   *Node
-	length int
-}
+type Deque []int
 
 func (d *Deque) leftVal() (int, bool) {
-	if d.head == nil {
+	if len(*d) <= 0 {
 		return 0, false
 	}
 
-	return d.head.value, true
+	return (*d)[0], true
 }
 
 func (d *Deque) rightVal() (int, bool) {
-	if d.tail == nil {
+	if len(*d) <= 0 {
 		return 0, false
 	}
 
-	return d.tail.value, true
+	return (*d)[len(*d)-1], true
 }
 
 func (d *Deque) pushRight(val int) {
-	newNode := &Node{value: val}
-	d.length++
-	if d.tail == nil {
-		d.head = newNode
-		d.tail = newNode
-		return
-	}
+	*d = append(*d, val)
+}
 
-	d.tail.right = newNode
-	newNode.left = d.tail
-	d.tail = newNode
+func (d *Deque) pushLeft(val int) {
+	*d = append([]int{val}, *d...)
 }
 
 func (d *Deque) popLeft() (int, bool) {
-	if d.length == 0 {
+	if len(*d) <= 0 {
 		return 0, false
 	}
 
-	d.length--
+	left := (*d)[0]
+	*d = (*d)[1:]
 
-	head := d.head
-	if d.length == 0 {
-		head := d.head
-		d.head = nil
-		d.tail = nil
-		return head.value, true
-	}
-
-	d.head.right.left = nil
-	d.head = d.head.right
-
-	return head.value, true
+	return left, true
 }
 
 func (d *Deque) popRight() (int, bool) {
-	if d.length == 0 {
+	if len(*d) <= 0 {
 		return 0, false
 	}
 
-	d.length--
+	right := (*d)[len(*d)-1]
+	*d = (*d)[:len(*d)-1]
 
-	tail := d.tail
-	if d.length == 0 {
-		tail := d.tail
-		d.head = nil
-		d.tail = nil
-		return tail.value, true
-	}
-
-	d.tail.left.right = nil
-	d.tail = d.tail.left
-
-	return tail.value, true
+	return right, true
 }
 
 func (d *Deque) push(val int) {
