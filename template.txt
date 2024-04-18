@@ -1,3 +1,4 @@
+
 package main
 
 import (
@@ -6,12 +7,12 @@ import (
 )
 
 func logic(input string) bool {
-    var result bool;
-    return result;
+	var result bool
+	return result
 }
 
 type singleTest struct {
-	input     string
+	input    string
 	expected bool
 }
 
