@@ -11,19 +11,23 @@ type ListNode struct {
 
 func logic(head *ListNode) bool {
 	result := false
-	hash := map[*ListNode]struct{}{}
 
-	for head != nil {
-		_, ok := hash[head]
+	if head == nil {
+		return result
+	}
 
-		if ok {
+	slow, fast := head, head.Next
+
+	for fast != nil && fast.Next != nil {
+		if slow == fast {
 			result = true
 			break
 		}
 
-		hash[head] = struct{}{}
-		head = head.Next
+		slow = slow.Next
+		fast = fast.Next.Next
 	}
+
 	return result
 }
 
