@@ -11,49 +11,62 @@ type ListNode struct {
 }
 
 func logic(lists []*ListNode) *ListNode {
-	var result *ListNode
+    // TODO: after completing the heap section, try to use heap in this problem 
+	for len(lists) > 1 {
+		mergedLists := []*ListNode{}
 
-    for _, list := range lists {
-        result = mergeLists(result, list);
-    }
-	return result
+		for i := 0; i < len(lists); i += 2 {
+			list1 := lists[i]
+			var list2 *ListNode
+
+			if i+1 < len(lists) {
+				list2 = lists[i+1]
+			}
+
+			mergedLists = append(mergedLists, mergeLists(list1, list2))
+		}
+
+		lists = mergedLists
+	}
+
+	return lists[0]
 }
 
 func mergeLists(one *ListNode, two *ListNode) *ListNode {
-    if one == nil && two == nil {
-        return nil
-    }
-    
-    if one == nil {
-        return two
-    }
+	if one == nil && two == nil {
+		return nil
+	}
 
-    if two == nil {
-        return one
-    }
+	if one == nil {
+		return two
+	}
 
-    dummy := &ListNode{}
-    curr := dummy
+	if two == nil {
+		return one
+	}
 
-    for one != nil || two != nil {
-        if one == nil {
-            curr.Next = &ListNode{Val: two.Val}
-            two = two.Next
-        } else if two == nil {
-            curr.Next = &ListNode{Val: one.Val}
-            one = one.Next
-        } else if one.Val <= two.Val {
-            curr.Next = &ListNode{Val: one.Val}
-            one = one.Next
-        } else if one.Val > two.Val {
-            curr.Next = &ListNode{Val: two.Val}
-            two = two.Next
-        }
+	dummy := &ListNode{}
+	curr := dummy
 
-        curr = curr.Next
-    }
+	for one != nil || two != nil {
+		if one == nil {
+			curr.Next = &ListNode{Val: two.Val}
+			two = two.Next
+		} else if two == nil {
+			curr.Next = &ListNode{Val: one.Val}
+			one = one.Next
+		} else if one.Val <= two.Val {
+			curr.Next = &ListNode{Val: one.Val}
+			one = one.Next
+		} else if one.Val > two.Val {
+			curr.Next = &ListNode{Val: two.Val}
+			two = two.Next
+		}
 
-    return dummy.Next
+		curr = curr.Next
+	}
+
+	return dummy.Next
 }
 
 func walk(head *ListNode) []int {
