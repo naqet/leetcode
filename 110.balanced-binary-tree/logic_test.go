@@ -11,12 +11,7 @@ type TreeNode struct {
 }
 
 func isBalanced(root *TreeNode) bool {
-    if root == nil {
-        return true
-    }
-
     _, ok := dfs(root)
-
     return ok
 }
 
@@ -28,15 +23,13 @@ func dfs(node *TreeNode) (int, bool) {
     left, okL := dfs(node.Left)
     right, okR := dfs(node.Right)
 
-    if !okL || !okR {
-        return 0, false
+    okDiff := max(left, right) - min(left, right) <= 1
+
+    if okL && okR && okDiff {
+        return 1 + max(left, right), true
     }
 
-    if max(left, right) - min(left, right) > 1 {
-        return 0, false
-    }
-
-    return 1 + max(left, right), true
+    return 0, false
 }
 
 type singleTest struct {
@@ -47,9 +40,18 @@ type singleTest struct {
 var tests = []singleTest{}
 
 func TestLogic(t *testing.T) {
-    root := &TreeNode{1, nil, &TreeNode{2, nil, &TreeNode{3, nil, nil}}}
+    root := &TreeNode{1, &TreeNode{2, nil, nil}, &TreeNode{2, &TreeNode{2, nil, nil}, &TreeNode{3, nil, nil}}}
 
     result := isBalanced(root)
+
+	if !result {
+		t.Error(result)
+		return
+	}
+
+    root = &TreeNode{1, nil, &TreeNode{2, nil, &TreeNode{3, nil, nil}}}
+
+    result = isBalanced(root)
 
 	if result {
 		t.Error(result)
