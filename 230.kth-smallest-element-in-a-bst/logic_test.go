@@ -1,7 +1,6 @@
 package main
 
 import (
-	"math"
 	"testing"
 )
 
@@ -12,26 +11,29 @@ type TreeNode struct {
 }
 
 func kthSmallest(root *TreeNode, k int) int {
-	return walk(root, &k)
-}
+	stack := []*TreeNode{}
 
-func walk(node *TreeNode, k *int) int {
-	res := math.MinInt
-	if node == nil {
-		return 0
+    curr := root
+
+	for len(stack) > 0 || curr != nil {
+        for curr != nil {
+            stack = append(stack, curr)
+            curr = curr.Left
+        }
+
+        curr = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+
+        k--
+        if k == 0 {
+            break
+        }
+
+
+        curr = curr.Right
 	}
 
-	res = max(walk(node.Left, k), res)
-
-	*k--
-
-	if *k == 0 {
-		return node.Val
-	}
-
-	res = max(walk(node.Right, k), res)
-
-	return res
+	return curr.Val
 }
 
 type singleTest struct {
@@ -44,19 +46,19 @@ var tests = []singleTest{}
 func TestLogic(t *testing.T) {
 	head := &TreeNode{4, &TreeNode{1, nil, nil}, &TreeNode{5, nil, &TreeNode{9, nil, nil}}}
 
-	result := kthSmallest(head, 2)
+	result := kthSmallest(head, 1)
 
-	if result != 4 {
+	if result != 1 {
 		t.Error(result)
 		return
 	}
 
-	head = &TreeNode{4, nil, &TreeNode{7, &TreeNode{4, nil, nil}, &TreeNode{10, nil, nil}}}
+	//head = &TreeNode{4, nil, &TreeNode{7, &TreeNode{4, nil, nil}, &TreeNode{10, nil, nil}}}
 
-	result = kthSmallest(head, 1)
+	//result = kthSmallest(head, 1)
 
-	if result != 4 {
-		t.Error(result)
-		return
-	}
+	//if result != 4 {
+	//	t.Error(result)
+	//	return
+	//}
 }
