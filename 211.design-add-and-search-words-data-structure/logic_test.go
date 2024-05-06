@@ -5,12 +5,12 @@ import (
 )
 
 type WordDictionary struct {
-	children map[byte]*WordDictionary
+	children [26]*WordDictionary
 	isEnd    bool
 }
 
 func Constructor() WordDictionary {
-	return WordDictionary{map[byte]*WordDictionary{}, false}
+	return WordDictionary{}
 }
 
 func (this *WordDictionary) AddWord(word string) {
@@ -18,11 +18,11 @@ func (this *WordDictionary) AddWord(word string) {
 
 	for i := 0; i < len(word); i++ {
 		ch := word[i]
-		if _, ok := curr.children[ch]; !ok {
-			curr.children[ch] = &WordDictionary{map[byte]*WordDictionary{}, false}
+		if curr.children[ch-'a'] == nil {
+			curr.children[ch-'a'] = &WordDictionary{}
 		}
 
-		curr = curr.children[ch]
+		curr = curr.children[ch-'a']
 	}
 
 	curr.isEnd = true
@@ -33,27 +33,31 @@ func (this *WordDictionary) Search(word string) bool {
 }
 
 func dfs(j int, root *WordDictionary, word string) bool {
+    if root == nil {
+        return false
+    }
+
 	curr := root
 
 	for i := j; i < len(word); i++ {
 		ch := word[i]
 		if ch == '.' {
 			for _, child := range curr.children {
-                if ok := dfs(i+1, child, word); ok {
-                    return true
-                }
+				if ok := dfs(i+1, child, word); ok {
+					return true
+				}
 			}
 
-            return false
+			return false
 		} else {
-			if _, ok := curr.children[ch]; !ok {
+			if curr.children[ch-'a'] == nil {
 				return false
 			}
-			curr = curr.children[ch]
+			curr = curr.children[ch-'a']
 		}
 	}
 
-    return curr.isEnd
+	return curr.isEnd
 }
 
 func TestLogic(t *testing.T) {
