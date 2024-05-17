@@ -18,9 +18,9 @@ type singleTest struct {
 var tests = []singleTest{}
 
 func TestLogic(t *testing.T) {
-	for _, test := range tests {
+	for i, test := range tests {
 		if output := logic(test.input); !reflect.DeepEqual(output, test.expected) {
-			t.Error(output, test.expected)
+            t.Error("Nr:", i , "Output:", output, "Expected:", test.expected)
 		}
 	}
 }
